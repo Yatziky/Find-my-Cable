@@ -6,6 +6,10 @@ capabilities:
   database:
     engine: mysql
 
+locality:
+  regions:
+    - us-socal1
+
 env:
   DB_HOST: ""
   DB_PORT: ""
