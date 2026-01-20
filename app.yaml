@@ -1,0 +1,14 @@
+kind: wasmer.io/App.v0
+name: fastapi-crud
+package: yourname/fastapi-crud@0.1.0
+
+capabilities:
+  database:
+    engine: mysql
+
+env:
+  DB_HOST: ""
+  DB_PORT: ""
+  DB_NAME: ""
+  DB_USERNAME: ""
+  DB_PASSWORD: ""
