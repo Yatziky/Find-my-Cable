@@ -6,10 +6,19 @@ from models import Base
 from schemas import ItemCreate, ItemRead
 import crud
 
+import logging
+
+# --- Logging setup ---
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("app")
+logger.info("FastAPI app defined (before startup)")
+
+# --- FastAPI App ---
 app = FastAPI()
 
 @app.on_event("startup")
 async def on_startup():
+    logger.info("Running startup: creating database tables")
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -17,27 +26,10 @@ async def on_startup():
 async def api_create_item(item: ItemCreate, db: AsyncSession = Depends(get_session)):
     return await crud.create_item(db, item)
 
-@app.get("/items/", response_model=list[ItemRead])
-async def api_get_items(db: AsyncSession = Depends(get_session)):
-    return await crud.get_items(db)
+# ... your other route handlers ...
 
-@app.get("/items/{item_id}", response_model=ItemRead)
-async def api_get_item(item_id: int, db: AsyncSession = Depends(get_session)):
-    db_item = await crud.get_item(db, item_id)
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return db_item
-
-@app.put("/items/{item_id}", response_model=ItemRead)
-async def api_update_item(item_id: int, item: ItemCreate, db: AsyncSession = Depends(get_session)):
-    db_item = await crud.update_item(db, item_id, item)
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return db_item
-
-@app.delete("/items/{item_id}", response_model=ItemRead)
-async def api_delete_item(item_id: int, db: AsyncSession = Depends(get_session)):
-    db_item = await crud.delete_item(db, item_id)
-    if not db_item:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return db_item
+# --- Start server when run directly ---
+if __name__ == "__main__":
+    import uvicorn
+    logger.info("Starting Uvicorn server")
+    uvicorn.run(app, host="0.0.0.0", port=8080)
