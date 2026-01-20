@@ -1,6 +1,7 @@
 kind: wasmer.io/App.v0
 name: fastapi-crud
 package: yourname/fastapi-crud@0.1.0
+debug: true
 
 capabilities:
   database:
