@@ -16,3 +16,15 @@ env:
   DB_NAME: ""
   DB_USERNAME: ""
   DB_PASSWORD: ""
+
+cli_args:
+  - "python"
+  - "-m"
+  - "uvicorn"
+  - "main:app"
+  - "--host"
+  - "0.0.0.0"
+  - "--port"
+  - "8080"
+  - "--log-level"
+  - "info"
